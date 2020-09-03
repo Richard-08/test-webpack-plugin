@@ -1,11 +1,12 @@
 const path = require("path");
 const HTMLPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const FileListPlugin = require("./src/plugins/example.plugin");
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
 const ImageminWebpWebpackPlugin = require("imagemin-webp-webpack-plugin");
 const HtmlReplaceWebpackPlugin = require("html-replace-webpack-plugin");
 /* const CopyWebpackPlugin = require("copy-webpack-plugin"); */
+const StringReplacePlugin = require("string-replace-webpack-plugin");
 
 const resource = {
   img: { "the-girl": "//cdn/img/the-girl.jpg" },
@@ -22,7 +23,7 @@ module.exports = {
     path: path.resolve(__dirname, "public"),
   },
   devServer: {
-    port: 3000,
+    port: 3017,
   },
   plugins: [
     new HTMLPlugin({
@@ -30,7 +31,7 @@ module.exports = {
     }),
     new CleanWebpackPlugin(),
 
-    new FileListPlugin(),
+    new VueLoaderPlugin(),
 
     new ImageminWebpWebpackPlugin({
       config: [
@@ -46,7 +47,7 @@ module.exports = {
     new HtmlReplaceWebpackPlugin([
       {
         pattern: /<img([^>]*[^/])>/g,
-        replacement: function (match, $1, type, file, $4, index, input) {
+        replacement: function(match, $1, type, file, $4, index, input) {
           const name = match.match(/[^\/\\]+(?=\.png|\.jpg)/);
           const ext = match.match(/\.(jpg|png|svg|jpeg|gif|webp)/g);
           return `
@@ -58,6 +59,8 @@ module.exports = {
         },
       },
     ]),
+
+    new StringReplacePlugin(),
   ],
   module: {
     rules: [
@@ -66,7 +69,7 @@ module.exports = {
         use: ["style-loader", "css-loader"],
       },
       {
-        test: /\.(jpg|png|svg|jpeg|gif)$/,
+        test: /\.(jpg|png|svg|jpeg|gif|webp)$/,
         use: [
           {
             loader: "file-loader",
@@ -75,6 +78,34 @@ module.exports = {
             },
           },
         ],
+      },
+      {
+        test: /App.vue$/,
+        loader: StringReplacePlugin.replace({
+          replacements: [
+            {
+              pattern: /<img([^>]*[^/])>/,
+              replacement: function(match, p1, offset, string) {
+                const name = match.match(/[^\/\\]+(?=\.png|\.jpg)/);
+                const ext = match.match(/\.(jpg|png|svg|jpeg|gif|webp)/g);
+                return `
+                  <picture>
+                    <source srcset=test.webp type="image/webp">
+                    ${match}
+                  </picture>
+                `;
+              },
+            },
+          ],
+        }),
+      },
+      {
+        test: /\.vue$/,
+        loader: "vue-loader",
+      },
+      {
+        test: /\.js$/,
+        loader: "babel-loader",
       },
     ],
   },
