@@ -1,32 +1,27 @@
 <template>
   <div id="app">
     <h1>Hello!</h1>
-    <img :src="img" alt="">
+    <img src="./assets/images/test.jpg" alt="">
   </div>
 </template>
 
 <script>
 
-import img from './assets/test.jpg';
-
 export default {
-  name: "App",
-  data() {
-    return {
-      img,
-    };
-  },
-};
+  name: 'App',
+  components: {
+    
+  }
+}
 </script>
 
 <style>
-
 #app {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 18px;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-align: center;
   color: #2c3e50;
+  margin-top: 60px;
 }
-
 </style>
