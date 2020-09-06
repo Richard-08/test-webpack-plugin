@@ -1,16 +1,18 @@
 <template>
   <div id="app">
     <h1>Hello!</h1>
-    <img src="./assets/images/test.jpg" alt="">
+    
+    <ImagesList />
   </div>
 </template>
 
 <script>
+import ImagesList from './components/ImagesList.vue';
 
 export default {
   name: 'App',
   components: {
-    
+    ImagesList
   }
 }
 </script>

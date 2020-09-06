@@ -24,7 +24,7 @@ module.exports = {
           loader: StringReplacePlugin.replace({
             replacements: [
               {
-                pattern: /<img([^>]*[^/])>/,
+                pattern: /<img([^>]*[^/])>/gi,
                 replacement: function(match, p1, offset, string) {
                   const src = match.replace(/src/gi, 'srcset').replace(/img/gi, 'source').replace(/jpg/gi, 'webp');
                   return `
